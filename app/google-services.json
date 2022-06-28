@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "394636187306",
+    "project_id": "firestoretest-dap",
+    "storage_bucket": "firestoretest-dap.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:394636187306:android:00d078d0479a8d9d4f62d3",
+        "android_client_info": {
+          "package_name": "com.example.eufirestoredap"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "394636187306-3guvteg0rj55utu9nbj147tisa5vp9t9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBNyB_jnsd8zYVz8pL1HwpJ3aK8LAPe0h4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "394636187306-3guvteg0rj55utu9nbj147tisa5vp9t9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

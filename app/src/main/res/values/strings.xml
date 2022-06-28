@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">EuFirestoreDAP</string>
+    <string name="register"><u>Register</u></string>
+    <string name="log_in"><u>Log In</u></string>
+</resources>
