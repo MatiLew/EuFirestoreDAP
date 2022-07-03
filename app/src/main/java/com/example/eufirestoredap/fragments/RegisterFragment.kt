@@ -10,16 +10,11 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.TextView
-import androidx.core.view.isVisible
 import androidx.navigation.findNavController
 import com.example.eufirestoredap.R
-import com.example.eufirestoredap.Users
 import com.example.eufirestoredap.viewModels.RegisterViewModel
 import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.auth.User
-import java.security.KeyFactory.getInstance
-import java.util.Calendar.getInstance
+import com.google.firebase.auth.FirebaseAuth
 
 class RegisterFragment : Fragment() {
 
@@ -35,6 +30,7 @@ class RegisterFragment : Fragment() {
     }
 
     private lateinit var viewModel: RegisterViewModel
+    val mAuth = FirebaseAuth.getInstance()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -55,37 +51,36 @@ class RegisterFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProvider(this).get(RegisterViewModel::class.java)
         progressBar.visibility = View.INVISIBLE
+
         registerButton.setOnClickListener {
-            saveFirestore(registerName.text.toString(), registerPassword.text.toString())
+            registerFirestore(registerName.text.toString(), registerPassword.text.toString())
         }
         loginButton.setOnClickListener {
             onLogInClick()
         }
     }
 
-    fun saveFirestore(registerName: String, registerPassword: String) {
-        val db = FirebaseFirestore.getInstance()
-        var user: Users = Users("nombres", "hola")
+    fun registerFirestore(registerName: String, registerPassword: String) {
+        var email = registerName
+        var password = registerPassword
 
-        user.name = registerName
-        user.password = registerPassword
-
-        progressBar.visibility = View.VISIBLE
-
-        db.collection("Users")
-            .add(user)
-            .addOnSuccessListener {
-                Snackbar.make(v, "Registro exitoso.", Snackbar.LENGTH_SHORT).show()
-                progressBar.visibility = View.INVISIBLE
+        if (!email.isEmpty() && !password.isEmpty()) {
+            mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener {
+                if (it.isSuccessful) {
+                    progressBar.visibility = View.INVISIBLE
+                    val action = RegisterFragmentDirections.actionRegisterFragmentToLoginFragment()
+                    v.findNavController().navigate(action)
+                } else {
+                    progressBar.visibility = View.INVISIBLE
+                    Snackbar.make(v, "Error al registrarse.", Snackbar.LENGTH_SHORT).show()
+                }
             }
-            .addOnFailureListener {
-                Snackbar.make(v, "Error al registrarse.", Snackbar.LENGTH_SHORT).show()
-                progressBar.visibility = View.INVISIBLE
-            }
-
+        } else {
+            Snackbar.make(v, "Por favor, llene los espacios.", Snackbar.LENGTH_SHORT).show()
+        }
     }
 
-    fun onLogInClick() {
+        fun onLogInClick() {
         val action = RegisterFragmentDirections.actionRegisterFragmentToLoginFragment()
         v.findNavController().navigate(action)
     }

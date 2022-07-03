@@ -9,11 +9,12 @@ import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.eufirestoredap.fragments.MainFragment
 
-class FiloAdapters (
+class FiloAdapters(
     private var filoList: MutableList<Filosofia>,
     private val context: Context,
-    val onItemClick : (Int) -> Unit
+    val onItemClick: (Int) -> Unit
 ): RecyclerView.Adapter<FiloAdapters.filoHolder> () {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): filoHolder {

@@ -1,19 +1,75 @@
 package com.example.eufirestoredap.viewModels
 
+import android.content.ContentValues
+import android.content.ContentValues.TAG
+import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.room.vo.Database
 import com.example.eufirestoredap.Filosofia
+import com.example.eufirestoredap.Repository
 import com.example.eufirestoredap.fragments.MainFragment
+import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
+import java.util.*
+import kotlin.collections.ArrayList
 
 class MainViewModel : ViewModel() {
-    var filosofos: MutableList<Filosofia> = ArrayList()
+    private val db = Firebase.firestore
+    private val repo = Repository()
+    private var _filosofos: MutableLiveData<ArrayList<Filosofia>> = MutableLiveData<ArrayList<Filosofia>>()
+    internal var filoList: MutableList<Filosofia> = ArrayList()
 
     init {
-        addFilo()
+        listenFilosfos()
+        getFilosofos()
     }
 
-    fun addFilo() {
+     private fun listenFilosfos() {
+        db.collection("Filosofos").addSnapshotListener {
+                snapshot, e ->
+            if(e != null) {
+                Log.w(TAG, "Listen Failed", e)
+                return@addSnapshotListener
+            }
+            if(snapshot != null) {
+                val allFilosofos = ArrayList<Filosofia>()
+                val documents = snapshot.documents
+                documents.forEach {
+                    val filosofo = it.toObject(Filosofia::class.java)
+                    if(filosofo != null) {
+                        allFilosofos.add(filosofo!!)
+                    }
+                }
+                _filosofos.value = allFilosofos
+            }
+        }
+    }
+
+    internal var filosofos: MutableLiveData<ArrayList<Filosofia>>
+        get() {return _filosofos}
+        set(value) {_filosofos = value}
+
+    private fun getFilosofos(){
+        db.collection("Filosofos")
+            .get()
+            .addOnSuccessListener { snapshot ->
+                if (snapshot != null) {
+                    for (filosofo in snapshot) {
+                        filoList.add(filosofo.toObject())
+                    }
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.w(ContentValues.TAG, "Error getting documents: ", exception)
+            }
+    }
+
+    // RUN ONE TIME
+    /* fun addFilo() {
         filosofos.add(
             Filosofia(
                 "Platon",
@@ -50,5 +106,5 @@ class MainViewModel : ViewModel() {
                 "René Descartes (pronunciación en francés: /ʁəne dekaʁt/ ( escuchar); latinización: Renatus Cartesius; onomástico del que se deriva el adjetivo cartesiano; La Haye en Touraine, 31 de marzo de 1596-Estocolmo, 11 de febrero de 1650) fue un filósofo, matemático y físico francés considerado el padre de la geometría analítica y la filosofía moderna, así como uno de los protagonistas con luz propia en el umbral de la revolución científica"
             )
         )
-    }
+    } */
 }
