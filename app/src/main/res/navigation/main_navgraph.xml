@@ -29,6 +29,9 @@
         <argument
             android:name="info"
             app:argType="string[]" />
+        <action
+            android:id="@+id/action_dataFragment_to_updateFragment"
+            app:destination="@id/updateFragment" />
     </fragment>
     <fragment
         android:id="@+id/uploadFragment"
@@ -55,6 +58,14 @@
         <action
             android:id="@+id/action_registerFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/updateFragment"
+        android:name="com.example.eufirestoredap.fragments.UpdateFragment"
+        android:label="UpdateFragment" >
+        <argument
+            android:name="filo_info"
+            app:argType="string" />
     </fragment>
 
 </navigation>

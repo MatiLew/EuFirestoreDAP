@@ -17,7 +17,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 
 class MainFragment : Fragment() {
-
     private lateinit var v: View
     private lateinit var recFilo: RecyclerView
     private lateinit var filoListAdapter: FiloAdapters
